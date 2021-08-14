@@ -1,0 +1,54 @@
+td {
+  width: 4.25vw;
+  height: 4.25vw;
+}
+
+td:not(td.notations) {
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+  z-index: 1;
+}
+
+td:not(td.notations):hover {
+  border: none;
+  background: rgba(37, 88, 228, 0.712);
+  z-index: 2;
+  transform: translate(1.5px, -1.5px);
+  animation: neonBlueText 1.5s ease-in-out infinite alternate;
+}
+
+.black {
+  background-color: grey;
+  border: 3px grey solid;
+}
+
+.white {
+  background-color: whitesmoke;
+  border: 3px whitesmoke solid;
+}
+
+.select-highlight {
+  border: 3px green solid !important;
+}
+
+.move-highlight {
+  background: radial-gradient(#FFFFFF, #00FF00) !important;
+  border: 3px white solid !important;
+}
+
+.capture-highlight {
+  background: radial-gradient(#FFFFFF, #FF0000) !important;
+  border: 3px white solid !important;
+}
+
+.black, .white {
+  font-size: 3.25vw;
+  font-weight: normal;
+  text-align: center;
+}
+
+.notations{
+  font-size: 1.75vw;
+  font-weight: normal;
+  text-align: center;
+}
