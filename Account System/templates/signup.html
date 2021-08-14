@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Signup</title>
+{% endblock %}
+
+
+{% block body %}
+<form id="forms" action="{{ url_for('signup') }}" method="post">
+  <h2>KHaZin</h2>
+  <p>
+    Username:<br>
+    <input type="text" placeholder="Username" name="username" id="usernm"><span id="nmfield"></span>
+  </p>
+  <p>
+    Password:<br>
+    <input type="password" placeholder="Password" name="password" id="pass"><span id="passfield"></span>
+  </p>
+  <p>
+    Confirm Password:<br>
+    <input type="password" placeholder="Confirm Password" name="confirm" id="conpass"><span id="conpassfield"></span>
+  </p>
+  <input type="submit" value="Signup">
+</form>
+
+<script type="text/javascript">
+  var users = {{ users | tojson | safe }};
+  var warning = {{ warning | tojson | safe }}
+</script>
+{% endblock %}

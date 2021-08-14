@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+
+{% block body %}
+<h2>Your Account has been Created!</h2>
+<h2>Please Sign in using your Username and Password</h2>
+
+<h2 id="timer">This Page will redirect to Home Page in 5 seconds!</h2>
+
+<script type="text/javascript">
+  var timeLeft = 5;
+  var timerHeader = document.getElementById("timer");
+
+  var redirectTimer = setInterval(() => {
+    if (timeLeft <= 0) location.href = "{{ url_for('home') }}"
+
+    timerHeader.innerHTML = `This Page will redirect to Home Page in ${timeLeft} seconds!`;
+    timeLeft--;
+  }, 1000) 
+</script>
+{% endblock %}
