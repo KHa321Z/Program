@@ -9,8 +9,8 @@ function Piece(type, position, img, captured = false, moved = false) {
 };
 
 function gameSetup() {
-  pieces["w_king"].check = false;
-  pieces["b_king"].check = false;
+  pieces["w_king1"].check = false;
+  pieces["b_king1"].check = false;
 
   $("td:not(td.notations)").attr("data-chess", "null");
 
@@ -19,6 +19,20 @@ function gameSetup() {
     $("#" + pieces[gamePiece].position).attr("data-chess", gamePiece);
   };
 };
+
+function endTurn(didItOrDidItNot) {
+  if (didItOrDidItNot) {
+     
+    selectedPiece = null;
+    toggleHighlight();
+    possibleMoves = possibleCaptures = [];
+    turn = opponent;
+    opponent = (turn == "w") ? "b" : "w";
+    $("#turn").html((turn == "b") ? "Its Black's Turn" : "Its White's Turn")
+    turnEnd = false;
+
+  }
+}
 
 function outOfBoundsCheck(val) {
   var pos = {};
@@ -166,12 +180,12 @@ function moveOptions(selectedPiece) {
       if (!pieces[selectedPiece].moved && !pieces[selectedPiece].check) {
         
         if (((selectedPiece == "w_king") && ($("#6_1").attr("data-chess") == "null") && ($("#7_1").attr("data-chess") == "null") && (!pieces["w_rook2"].moved)) || ((selectedPiece == "b_king") && ($("#6_8").attr("data-chess") == "null") && ($("#7_8").attr("data-chess") == "null") && (!pieces["b_rook2"].moved))) coordinates = coordinates.concat([{x: 2, y: 0}]);
-        else if (((selectedPiece == "w_king") && ($("#4_1").attr("data-chess") == "null") && ($("3_1").attr("data-chess") == "null") && ($("2_1").attr("data-chess") == "null")  && (!pieces["w_rook1"].moved)) || ((selectedPiece == "b_king") && ($("#4_8").attr("data-chess") == "null") && ($("3_8").attr("data-chess") == "null") && ($("2_8").attr("data-chess") == "null")  && (!pieces["b_rook1"].moved))) coordinates = coordinates.concat([{x: -2, y: 0}]);
+        else if (((selectedPiece == "w_king") && ($("#4_1").attr("data-chess") == "null") && ($("#3_1").attr("data-chess") == "null") && ($("#2_1").attr("data-chess") == "null")  && (!pieces["w_rook1"].moved)) || ((selectedPiece == "b_king") && ($("#4_8").attr("data-chess") == "null") && ($("#3_8").attr("data-chess") == "null") && ($("#2_8").attr("data-chess") == "null")  && (!pieces["b_rook1"].moved))) coordinates = coordinates.concat([{x: -2, y: 0}]);
 
       };
       
       options = pieceOptions(selectedPiece, pieceType, piecePosition, coordinates.map(addingCoordinates));
-      break;
+      break;    
   };
 
   return (options);
@@ -189,15 +203,26 @@ function pieceOptions(selectedPiece, pieceType, piecePosition, coordinates) {
       coordinates = coordinates.filter(val => {
         let piecePos = {};
         let coordinate = {};
-        let yOffset = (pieceType.slice(0, 1) == "w") ? 2 : -2;
+        let yOffsetForSingleMove = (pieceType.slice(0, 1) == "w") ? 1 : -1;
+        let yOffset = yOffsetForSingleMove * 2;
 
         [coordinate.x, coordinate.y] = val.split("_").map(val => { return (parseInt(val)) });
         [piecePos.x, piecePos.y] = piecePosition.split("_").map(val => { return (parseInt(val)) });
 
+        // diagonal capturing move
         if (coordinate.x != piecePos.x) {
+
           return ($("#" + val).attr("data-chess").slice(0, 1) == pieces[selectedPiece].opponent)
+
         } else if ($("#" + val).attr("data-chess") == "null") {
-          if (!pieces[selectedPiece].moved && (coordinate.y == (piecePos.y + yOffset))) return (true)
+          // first double move
+          if (!pieces[selectedPiece].moved && (coordinate.y == (piecePos.y + yOffset))) {
+            // if there is not a piece in front of the pawn
+            if ($("#" + piecePos.x + "_" + (piecePos.y + yOffsetForSingleMove)).attr("data-chess") == "null") return (true)
+
+            // if there is a piece in front of the pawn
+            return (false)
+          }
           
           // simple one piece forward move
           return (true)
@@ -260,8 +285,8 @@ function toggleHighlight() {
 }
 
 var pieces = {
-  w_king: new Piece("w_king", "5_1", "&#9812;"),
-  w_queen: new Piece("w_queen", "4_1", "&#9813;"),
+  w_king1: new Piece("w_king", "5_1", "&#9812;"),
+  w_queen1: new Piece("w_queen", "4_1", "&#9813;"),
   w_bishop1: new Piece("w_bishop", "3_1", "&#9815;"),
   w_bishop2: new Piece("w_bishop", "6_1", "&#9815;"),
   w_knight1: new Piece("w_knight", "2_1", "&#9816;"),
@@ -276,8 +301,8 @@ var pieces = {
   w_pawn6: new Piece("w_pawn", "6_2", "&#9817;"),
   w_pawn7: new Piece("w_pawn", "7_2", "&#9817;"),
   w_pawn8: new Piece("w_pawn", "8_2", "&#9817;"),
-  b_king: new Piece("b_king", "5_8", "&#9818;"),
-  b_queen: new Piece("b_queen", "4_8", "&#9819;"),
+  b_king1: new Piece("b_king", "5_8", "&#9818;"),
+  b_queen1: new Piece("b_queen", "4_8", "&#9819;"),
   b_bishop1: new Piece("b_bishop", "3_8", "&#9821;"),
   b_bishop2: new Piece("b_bishop", "6_8", "&#9821;"),
   b_knight1: new Piece("b_knight", "2_8", "&#9822;"),
@@ -303,6 +328,18 @@ var possibleCaptures = [];
 
 $(document).ready(() => {
   gameSetup()
+
+  $(".options").click(e => {
+
+    $("#pawn-change-window").toggle();
+    
+    pieces[selectedPiece].type = pieces[selectedPiece].player + "_" + e.target.id;
+    pieces[selectedPiece].img = pieces[pieces[selectedPiece].player + "_" + e.target.id + "1"].img;
+    $("#" + pieces[selectedPiece].position).html(pieces[selectedPiece].img);
+    
+    endTurn(true);
+
+  });
 
   $("td:not(td.notations)").click(e => {
 
@@ -338,22 +375,30 @@ $(document).ready(() => {
 
     } else if (selectedPiece && ((targetCellAttr == "null") || (pieces[targetCellAttr].player == opponent)) && selectedPieceOptions.includes(targetCellPosition)) {
         
+      // castling
       if ((pieces[selectedPiece].type.slice(2) == "king") && (!pieces[selectedPiece].moved)) {
 
-        var rookPosition = (turn == "w") ? ((targetCellPosition == "3_1") ? "4_1" : "6_1") : ((targetCellPosition == "3_8") ? "4_8" : "6_8");
-        var rookOriginalPosition = (turn == "w") ? ((rookPosition == "4_1") ? "1_1" : "8_1") : ((rookPosition == "4_8") ? "1_8" : "8_8");
+        // returns false if the castling conditions are not met
+        var rookPosition = (turn == "w") ? ((targetCellPosition == "3_1") ? "4_1" : ((targetCellPosition == "7_1") ? "6_1" : false)) : ((targetCellPosition == "3_8") ? "4_8" : ((targetCellPosition == "7_8") ? "6_8" : false));
 
-        $("#" + rookPosition).html(pieces[$("#" + rookOriginalPosition).attr("data-chess")].img);
-        $("#" + rookPosition).attr("data-chess", [$("#" + rookOriginalPosition).attr("data-chess")]);
+        if (rookPosition) {
 
-        $("#" + rookOriginalPosition).html("");
-        $("#" + rookOriginalPosition).attr("data-chess", "null")
+          var rookOriginalPosition = (turn == "w") ? ((rookPosition == "4_1") ? "1_1" : "8_1") : ((rookPosition == "4_8") ? "1_8" : "8_8");
 
-        pieces[$("#" + rookPosition).attr("data-chess")].postion = rookPosition;
-        pieces[$("#" + rookPosition).attr("data-chess")].moved = true;
+          $("#" + rookPosition).html(pieces[$("#" + rookOriginalPosition).attr("data-chess")].img);
+          $("#" + rookPosition).attr("data-chess", [$("#" + rookOriginalPosition).attr("data-chess")]);
+
+          $("#" + rookOriginalPosition).html("");
+          $("#" + rookOriginalPosition).attr("data-chess", "null")
+
+          pieces[$("#" + rookPosition).attr("data-chess")].postion = rookPosition;
+          pieces[$("#" + rookPosition).attr("data-chess")].moved = true;
+
+        }
 
       };
 
+      // capture move
       if (targetCellAttr.slice(0, 1) == opponent) {
         
         pieces[targetCellAttr].captured = true;
@@ -362,6 +407,7 @@ $(document).ready(() => {
 
       };
       
+      // simple move
       $("#" + pieces[selectedPiece].position).toggleClass("select-highlight");
       $("#" + targetCellPosition).html(pieces[selectedPiece].img);
       $("#" + targetCellPosition).attr("data-chess", selectedPiece);
@@ -372,20 +418,19 @@ $(document).ready(() => {
       pieces[selectedPiece].position = targetCellPosition;
       pieces[selectedPiece].moved = true;
       turnEnd = true;
+
+      //pawn change window
+      if ((pieces[selectedPiece].type.slice(2) == "pawn") && ((pieces[selectedPiece].position.split("_")[1] == "1") || (pieces[selectedPiece].position.split("_")[1] == "8"))) {
+        
+        turnEnd = false;
+        $("#pawn-change-window").toggle();
+        
+      }
       
     };
 
-    if (turnEnd) {
-      
-      selectedPiece = null;
-      toggleHighlight();
-      possibleMoves = possibleCaptures = [];
-      turn = opponent;
-      opponent = (turn == "w") ? "b" : "w";
-      $("#turn").html((turn == "b") ? "Its Black's Turn" : "Its White's Turn")
-      turnEnd = false;
+    endTurn(turnEnd);
 
-    };
   })
 
   $("body").contextmenu(e => {
