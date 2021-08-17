@@ -3,8 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
-    <title>Chess</title>
+    <title>M(Ch)ess</title>
     <link href="style.css" rel="stylesheet" type="text/css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
   </head>
   <body>
     <table cellspacing="0">
@@ -116,7 +118,38 @@
         <td class="notations">H</td>
       </tr>
     </table>
-    <dir id="turn">Its White's Turn</dir>
+
+    <div id="turn">Its White's Turn</div>
+
+    <div id="pawn-change-window">
+
+      <div>Change Pawn &#9817; into</div>
+
+      <div class="row">
+        <div id="queen" class="options">
+          <div class="icon">&#9813;</div>
+          <div class="text">Queen</div>
+        </div>
+
+        <div id="knight" class="options">
+          <div class="icon">&#9816;</div>
+          <div class="text">Horse</div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div id="bishop" class="options">
+          <div class="icon">&#9815;</div>
+          <div class="text">Bishop</div>
+        </div>
+        
+        <div id="rook" class="options">
+          <div class="icon">&#9814;</div>
+          <div class="text">Rook</div>
+        </div>
+        
+      </div>
+    </div>
     
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
     <script src="script.js"></script>
