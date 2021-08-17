@@ -284,6 +284,102 @@ function toggleHighlight() {
 
 }
 
+function clickCell(e) {
+
+  e.stopPropagation();
+  
+  var selectedPieceOptions;
+  var targetCell = this;
+  var targetCellPosition = targetCell.id;
+  var targetCellAttr = targetCell.getAttribute("data-chess");
+
+  if (selectedPiece) selectedPieceOptions = moveOptions(selectedPiece);
+
+  if ((selectedPiece != targetCellAttr) && (targetCellAttr != "null") && (pieces[targetCellAttr].player == turn)) {
+    
+    if (selectedPiece != targetCellAttr) {
+
+      $("#" + pieces[targetCellAttr].position).toggleClass("select-highlight");
+      toggleHighlight();
+
+    }
+
+    if (selectedPiece) $("#" + pieces[selectedPiece].position).toggleClass("select-highlight");
+    selectedPiece = targetCellAttr;
+
+    highlightMoves(moveOptions(selectedPiece));
+    toggleHighlight();
+
+  } else if (selectedPiece == targetCellAttr) {
+    
+    $("#" + pieces[selectedPiece].position).toggleClass("select-highlight");
+    selectedPiece = null;
+
+    toggleHighlight();
+    possibleMoves = possibleCaptures = [];
+
+  } else if (selectedPiece && ((targetCellAttr == "null") || (pieces[targetCellAttr].player == opponent)) && selectedPieceOptions.includes(targetCellPosition)) {
+      
+    // castling
+    if ((pieces[selectedPiece].type.slice(2) == "king") && (!pieces[selectedPiece].moved)) {
+
+      // returns false if the castling conditions are not met
+      var rookPosition = (turn == "w") ? ((targetCellPosition == "3_1") ? "4_1" : ((targetCellPosition == "7_1") ? "6_1" : false)) : ((targetCellPosition == "3_8") ? "4_8" : ((targetCellPosition == "7_8") ? "6_8" : false));
+
+      if (rookPosition) {
+
+        var rookOriginalPosition = (turn == "w") ? ((rookPosition == "4_1") ? "1_1" : "8_1") : ((rookPosition == "4_8") ? "1_8" : "8_8");
+
+        $("#" + rookPosition).html(pieces[$("#" + rookOriginalPosition).attr("data-chess")].img);
+        $("#" + rookPosition).attr("data-chess", [$("#" + rookOriginalPosition).attr("data-chess")]);
+
+        $("#" + rookOriginalPosition).html("");
+        $("#" + rookOriginalPosition).attr("data-chess", "null")
+
+        pieces[$("#" + rookPosition).attr("data-chess")].postion = rookPosition;
+        pieces[$("#" + rookPosition).attr("data-chess")].moved = true;
+
+      }
+
+    };
+
+    // capture move
+    if (targetCellAttr.slice(0, 1) == opponent) {
+      
+      pieces[targetCellAttr].captured = true;
+      pieces[targetCellAttr].position = turn + "capturedPieces";
+      $("#" + targetCellPosition).html("");
+
+    };
+    
+    // simple move
+    $("#" + pieces[selectedPiece].position).toggleClass("select-highlight");
+    $("#" + targetCellPosition).html(pieces[selectedPiece].img);
+    $("#" + targetCellPosition).attr("data-chess", selectedPiece);
+
+    $("#" + pieces[selectedPiece].position).html("");
+    $("#" + pieces[selectedPiece].position).attr("data-chess", "null");
+
+    pieces[selectedPiece].position = targetCellPosition;
+    pieces[selectedPiece].moved = true;
+    turnEnd = true;
+
+    //pawn change window
+    if ((pieces[selectedPiece].type.slice(2) == "pawn") && ((pieces[selectedPiece].position.split("_")[1] == "1") || (pieces[selectedPiece].position.split("_")[1] == "8"))) {
+      
+      turnEnd = false;
+
+      $("#pawn-change-window").toggle();
+      $(this).off("click");
+      
+    }
+    
+  };
+
+  endTurn(turnEnd);
+
+};
+
 var pieces = {
   w_king1: new Piece("w_king", "5_1", "&#9812;"),
   w_queen1: new Piece("w_queen", "4_1", "&#9813;"),
@@ -337,101 +433,13 @@ $(document).ready(() => {
     pieces[selectedPiece].img = pieces[pieces[selectedPiece].player + "_" + e.target.id + "1"].img;
     $("#" + pieces[selectedPiece].position).html(pieces[selectedPiece].img);
     
+    $("td:not(td.notations)").on("click", clickCell);
+
     endTurn(true);
 
   });
 
-  $("td:not(td.notations)").click(e => {
-
-    var selectedPieceOptions;
-    var targetCell = e.target;
-    var targetCellPosition = targetCell.id;
-    var targetCellAttr = targetCell.getAttribute("data-chess");
-
-    if (selectedPiece) selectedPieceOptions = moveOptions(selectedPiece);
-
-    if ((selectedPiece != targetCellAttr) && (targetCellAttr != "null") && (pieces[targetCellAttr].player == turn)) {
-      
-      if (selectedPiece != targetCellAttr) {
-
-        $("#" + pieces[targetCellAttr].position).toggleClass("select-highlight");
-        toggleHighlight();
-
-      }
-
-      if (selectedPiece) $("#" + pieces[selectedPiece].position).toggleClass("select-highlight");
-      selectedPiece = targetCellAttr;
-
-      highlightMoves(moveOptions(selectedPiece));
-      toggleHighlight();
-
-    } else if (selectedPiece == targetCellAttr) {
-      
-      $("#" + pieces[selectedPiece].position).toggleClass("select-highlight");
-      selectedPiece = null;
-
-      toggleHighlight();
-      possibleMoves = possibleCaptures = [];
-
-    } else if (selectedPiece && ((targetCellAttr == "null") || (pieces[targetCellAttr].player == opponent)) && selectedPieceOptions.includes(targetCellPosition)) {
-        
-      // castling
-      if ((pieces[selectedPiece].type.slice(2) == "king") && (!pieces[selectedPiece].moved)) {
-
-        // returns false if the castling conditions are not met
-        var rookPosition = (turn == "w") ? ((targetCellPosition == "3_1") ? "4_1" : ((targetCellPosition == "7_1") ? "6_1" : false)) : ((targetCellPosition == "3_8") ? "4_8" : ((targetCellPosition == "7_8") ? "6_8" : false));
-
-        if (rookPosition) {
-
-          var rookOriginalPosition = (turn == "w") ? ((rookPosition == "4_1") ? "1_1" : "8_1") : ((rookPosition == "4_8") ? "1_8" : "8_8");
-
-          $("#" + rookPosition).html(pieces[$("#" + rookOriginalPosition).attr("data-chess")].img);
-          $("#" + rookPosition).attr("data-chess", [$("#" + rookOriginalPosition).attr("data-chess")]);
-
-          $("#" + rookOriginalPosition).html("");
-          $("#" + rookOriginalPosition).attr("data-chess", "null")
-
-          pieces[$("#" + rookPosition).attr("data-chess")].postion = rookPosition;
-          pieces[$("#" + rookPosition).attr("data-chess")].moved = true;
-
-        }
-
-      };
-
-      // capture move
-      if (targetCellAttr.slice(0, 1) == opponent) {
-        
-        pieces[targetCellAttr].captured = true;
-        pieces[targetCellAttr].position = turn + "capturedPieces";
-        $("#" + targetCellPosition).html("");
-
-      };
-      
-      // simple move
-      $("#" + pieces[selectedPiece].position).toggleClass("select-highlight");
-      $("#" + targetCellPosition).html(pieces[selectedPiece].img);
-      $("#" + targetCellPosition).attr("data-chess", selectedPiece);
-
-      $("#" + pieces[selectedPiece].position).html("");
-      $("#" + pieces[selectedPiece].position).attr("data-chess", "null");
-
-      pieces[selectedPiece].position = targetCellPosition;
-      pieces[selectedPiece].moved = true;
-      turnEnd = true;
-
-      //pawn change window
-      if ((pieces[selectedPiece].type.slice(2) == "pawn") && ((pieces[selectedPiece].position.split("_")[1] == "1") || (pieces[selectedPiece].position.split("_")[1] == "8"))) {
-        
-        turnEnd = false;
-        $("#pawn-change-window").toggle();
-        
-      }
-      
-    };
-
-    endTurn(turnEnd);
-
-  })
+  $("td:not(td.notations)").on("click", clickCell);
 
   $("body").contextmenu(e => {
     e.preventDefault();
