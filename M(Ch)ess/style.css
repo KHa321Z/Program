@@ -1,0 +1,198 @@
+* {
+  font-family: 'Quicksand';
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+}
+
+div#container {
+  height: 500px;
+  width: 600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background: rgb(87, 86, 86);
+  transform: translate(-50%,-50%);
+  border-radius: 50% 20% / 10% 40%;
+  margin: 0;
+}
+
+div#black {
+  position: relative;
+  height: 40%;
+  width: 40%;
+  background: #000;
+  color: white;
+  top: 60%;
+  left: 50px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: 500ms;
+  display: block;
+  border-radius: 50% 20% / 10% 40%;
+  margin: 0;
+}
+
+div#white {
+  position: absolute;
+  height: 40%;
+  width: 40%;
+  background: #fff;
+  color: rgb(0, 0, 0);
+  top: 60%;
+  left: calc(50% + 10px);
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: 500ms;
+  display: block;
+  border-radius: 50% 20% / 10% 40%;
+  margin: 0;
+}
+
+div p {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  font-size: 35px;
+  margin: 0;
+  pointer-events: none;
+}
+
+div#black:hover, div#white:hover {
+  width: 41%;
+  height: 41%;
+  box-shadow: 7px 7px 6px 3px rgb(48, 47, 47)
+}
+
+div h1 {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-size: 45px;
+  font-style: italic;
+}
+
+#gameTable {
+  display: none;
+}
+
+td {
+  width: 4.25vw;
+  height: 4.25vw;
+}
+
+td:not(td.notations) {
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+  z-index: 1;
+}
+
+td:not(td.notations):hover {
+  border: none;
+  background: rgba(37, 88, 228, 0.712);
+  z-index: 2;
+  transform: translate(1.5px, -1.5px);
+  animation: neonBlueText 1.5s ease-in-out infinite alternate;
+}
+
+.black {
+  background-color: grey;
+  border: 3px grey solid;
+}
+
+.white {
+  background-color: whitesmoke;
+  border: 3px whitesmoke solid;
+}
+
+.select-highlight {
+  border: 3px green solid !important;
+}
+
+.move-highlight {
+  background: radial-gradient(#FFFFFF, #00FF00) !important;
+  border: 3px white solid !important;
+}
+
+.capture-highlight {
+  background: radial-gradient(#FFFFFF, #FF0000) !important;
+  border: 3px white solid !important;
+}
+
+.black, .white {
+  font-size: 3.25vw;
+  font-weight: normal;
+  text-align: center;
+}
+
+.notations{
+  font-size: 1.75vw;
+  font-weight: normal;
+  text-align: center;
+}
+
+h1 {
+  position: relative;
+  text-align: center;
+}
+
+#pawn-change-window {
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  width: 500px;
+  height: 400px;
+  text-align: center;
+  font-size: 35px;
+  padding: auto;
+  background: linear-gradient(to top left, rgba(255, 170, 170, 0.3) 0%, rgba(255, 170, 170, 0.12) 50%, rgba(255, 170, 170, 0.3) 100%);
+  border: 3px solid linear-gradient(to top left, rgba(255, 170, 170, 0.3) 0%, rgba(255, 170, 170, 0.12) 50%, rgba(255, 170, 170, 0.3) 100%);;
+  border-radius: 25px;
+  backdrop-filter: blur(5px);
+  z-index: 1;
+  display: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 10px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  padding: 2px 5px 10px 5px;
+  border: 1.5px solid black;
+  border-radius: 5px;
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+  transition: 1s ease;
+  cursor: pointer;
+}
+
+.options:hover {
+  box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.75);
+  transform: scale(1.05);
+}
+
+.options .text {
+  font-size: 25px;
+  pointer-events: none;
+}
+
+.options .icon {
+  font-size: 35px;
+  pointer-events: none;
+}
