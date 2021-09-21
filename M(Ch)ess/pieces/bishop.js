@@ -1,5 +1,3 @@
-import Piece from "./piece.js";
-
 class Bishop extends Piece {
 
   _img;
