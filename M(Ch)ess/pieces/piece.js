@@ -203,3 +203,5 @@ class Piece {
   };
 
 };
+
+export {Piece as default};
