@@ -1,5 +1,3 @@
-import Piece from "./piece.js";
-
 class Bishop extends Piece {
 
   _img;
@@ -53,5 +51,3 @@ class Bishop extends Piece {
   };
 
 };
-
-export {Bishop as default};
