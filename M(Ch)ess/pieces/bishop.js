@@ -53,5 +53,3 @@ class Bishop extends Piece {
   };
 
 };
-
-export {Bishop as default};
