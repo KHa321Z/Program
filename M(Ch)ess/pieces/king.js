@@ -1,5 +1,3 @@
-import Piece from "./piece.js";
-
 class King extends Piece {
 
   _img;
@@ -201,5 +199,3 @@ class King extends Piece {
   };
 
 };
-
-export {King as default};
