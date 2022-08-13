@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Rubik's Cube</title>
+    <link href="style.css" rel="stylesheet" type="text/css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/threejs-meshline@2.0.11/src/index.js"></script>
+    <!--three.js files-->
+    <!--https://github.com/mrdoob/three.js/blob/master/examples/js/controls/OrbitControls.js-->
+    <script src="./libraries/TrackballControls.js"></script>
+  </head>
+  <body>
+    <div id="canvasBox">
+      <canvas id="myCanvas"></canvas>
+    </div>
+    <div>
+      <button id="upmovebtn" onclick="rubikCube.upMove()"> U </button>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

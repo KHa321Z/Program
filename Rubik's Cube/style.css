@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.upmovebtn {
+  left: 1000px;
+}
+
+#myCanvas {
+  width: 70%;
+  height: 100vh;
+  display: block;
+}
