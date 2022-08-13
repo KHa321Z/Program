@@ -39,8 +39,12 @@ class Website():
           urllib.request.urlopen("https://old-bot.wwemonstermonst.repl.co/")
           break
 
+intents = discord.Intents.default()
+intents.members = True
+
 bot = commands.Bot(
   command_prefix = ".", 
+  intents=intents, 
   help_command = None
 )
 
@@ -50,4 +54,4 @@ for filename in os.listdir("./cogs"):
 
 website = Website()
 
-bot.run(os.environ.get("DISCORD_TOKEN"))
+bot.run(os.environ['DISCORD_TOKEN'])

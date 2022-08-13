@@ -1,4 +1,5 @@
 import os
+import urllib
 import discord
 from discord.ext import commands
 
@@ -57,6 +58,13 @@ class Settings(commands.Cog):
   async def load(self, ctx, *, extension):
     self.bot.load_extension(f'cogs.{extension}')
     await ctx.send(f'{extension} loaded')
+
+  @commands.command()
+  async def ping(self, ctx):
+    urllib.request.urlopen("https://bot-a-not.khz.repl.co/")
+    urllib.request.urlopen("https://Old-Bot.wwemonstermonst.repl.co")
+    
+    await ctx.send(f"Pong :ping_pong:! The ping is {round(self.bot.latency * 1000)}ms")
   
   @commands.command()
   @commands.is_owner()

@@ -1,5 +1,4 @@
 import random
-import urllib
 import asyncio
 import discord
 from discord.ext import commands
@@ -7,12 +6,6 @@ from discord.ext import commands
 class Simple(commands.Cog):
   def __init__(self, bot):
     self.bot = bot
-  
-  @commands.command()
-  async def ping(self, ctx):
-    #urllib.request.urlopen("https://bot-a-not.khz.repl.co/")
-    urllib.request.urlopen("https://Old-Bot.wwemonstermonst.repl.co")
-    await ctx.send(f"pong! The ping is {round(self.bot.latency * 1000)}ms⁻¹")
 
   @commands.command()
   async def pic(self, ctx, member: discord.Member = None):
@@ -72,8 +65,8 @@ class Simple(commands.Cog):
     except asyncio.TimeoutError:
       await ctx.send("You should have atleast Replied!")
     
-  @commands.command()
-  async def info(self, ctx, member: discord.Member = None):
+  @commands.command(aliases=["Id", "info", "Info"])
+  async def id(self, ctx, member: discord.Member = None):
     member = ctx.message.author if (member == None) else (member)
     roles = [role for role in member.roles]
 

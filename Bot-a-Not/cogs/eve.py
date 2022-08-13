@@ -13,10 +13,10 @@ class Events(commands.Cog):
   
   @commands.Cog.listener()
   async def on_command_error(self, ctx, error):
-    if isinstance(error, commands.CommandNotFound):
+    """if isinstance(error, commands.CommandNotFound):
       await ctx.send(f"The Command **{ctx.message.content}** does not Exist! :expressionless:")
       await ctx.send("Plz check the help command `.help` for the list of commands!")
-      return
+      return"""
 
     if isinstance(error, commands.MissingPermissions):
       await ctx.send(f"{ctx.author.name} is missing Permissions to use the Command! {ctx.message.content}")
@@ -30,12 +30,11 @@ class Events(commands.Cog):
   
   @commands.Cog.listener()
   async def on_message(self, ctx):
-    greeting = ["aoa", "assalam-u-alaikum", "assalam u alaikum", "assalam o alaikum", "assalam-o-alaikum"]
 
     if (ctx.author == self.bot.user):
       return
     
-    if any(i in ctx.content.lower().split() for i in greeting):
+    if any(i in ctx.content.lower().split() for i in ["aoa", "assalam-u-alaikum", "assalam u alaikum", "assalam o alaikum", "assalam-o-alaikum"]):
       await ctx.channel.send("WS")
 
 def setup(bot):
