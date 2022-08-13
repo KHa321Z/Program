@@ -1,0 +1,3 @@
+function evaluateBoard() {};
+
+function minimax() {};

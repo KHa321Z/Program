@@ -1,0 +1,9 @@
+Things Future Me will do:
+
+Clean Out the Code
+Win and Draw conditions
+Castling & En Passant
+Computer(Min-max algorithm)
+Multiplayer
+Chat with Chess
+Ultimate Name Chuss

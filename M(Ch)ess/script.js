@@ -23,7 +23,7 @@ class Game {
   constructor() {
 
     this.#playerTurn = 1;
-    this.#turn = {start: false, end: false};
+    this.#turn = {end: false};
 
     this.#selectedPiece = null;
     this.#possibleMoves = this.#possibleCaptures = [];
@@ -38,7 +38,7 @@ class Game {
   #highlightMoves(coordinates) {
 
     this.#possibleMoves = coordinates.filter(val => (this.#gamePieces[val] == null));
-    this.#possibleCaptures = coordinates.filter(val => (this.#gamePieces[val] != null && this.#gamePieces[val].getType() != "King"));
+    this.#possibleCaptures = coordinates.filter(val => (this.#gamePieces[val] != null && this.#gamePieces[val].type != "King"));
 
   };
   
@@ -116,11 +116,11 @@ class Game {
     };
 
     // for initializing rooks in king class
-    Object.values(Object.filter(this.#gamePieces, ([location, piece]) => piece.getType() == "King")).forEach( element => element.initializeRooks(this.#gamePieces) );
+    Object.values(Object.filter(this.#gamePieces, ([location, piece]) => piece.type == "King")).forEach( element => element.initializeRooks(this.#gamePieces) );
 
     this.#player1 = {
       color: this.#player1Color, 
-      pieces: Object.filter(this.#gamePieces, ([location, piece]) => piece.getPlayer() == 1), 
+      pieces: Object.filter(this.#gamePieces, ([location, piece]) => piece.player == 1), 
       king: this.#gamePieces["5_1"], 
       check: false, 
       blockingFromCheckPieces: [], 
@@ -129,7 +129,7 @@ class Game {
 
     this.#player2 = {
       color: this.#player2Color, 
-      pieces: Object.filter(this.#gamePieces, ([location, piece]) => piece.getPlayer() == 2), 
+      pieces: Object.filter(this.#gamePieces, ([location, piece]) => piece.player == 2), 
       king: this.#gamePieces["5_8"], 
       check: false, 
       blockingFromCheckPieces: [], 
@@ -138,7 +138,7 @@ class Game {
 
     this.#gameSetup();
 
-  }
+  };
 
   #gameSetup() {
 
@@ -165,17 +165,17 @@ class Game {
     
     if (this.#selectedPiece) selectedPieceOptions = this.#selectedPiece.getValidMoves(this.#gamePieces);
     
-    if ((this.#selectedPiece != targetCellPiece) && (targetCellPiece != null) && (targetCellPiece.getPlayer() == this.#playerTurn)) {
+    if ((this.#selectedPiece != targetCellPiece) && (targetCellPiece != null) && (targetCellPiece.player == this.#playerTurn)) {
       
       // if some new piece is clicked
       if (this.#selectedPiece != targetCellPiece) {
         
-        $("#" + targetCellPiece.getPosition()).toggleClass("select-highlight");
+        $("#" + targetCellPiece.position).toggleClass("select-highlight");
         this.#toggleHighlight();
   
       }
   
-      if (this.#selectedPiece) $("#" + this.#selectedPiece.getPosition()).toggleClass("select-highlight");
+      if (this.#selectedPiece) $("#" + this.#selectedPiece.position).toggleClass("select-highlight");
 
       this.#selectedPiece = targetCellPiece;
   
@@ -185,14 +185,14 @@ class Game {
       // if the same piece is clicked again
     } else if ((this.#selectedPiece) && (this.#selectedPiece == targetCellPiece)) {
       
-      $("#" + this.#selectedPiece.getPosition()).toggleClass("select-highlight");
+      $("#" + this.#selectedPiece.position).toggleClass("select-highlight");
       this.#selectedPiece = null;
   
       this.#toggleHighlight();
       this.#possibleMoves = this.#possibleCaptures = [];
   
       // piece move conditions
-    } else if (this.#selectedPiece && ((targetCellPiece == null) || (targetCellPiece.getPlayer() != this.#playerTurn)) && selectedPieceOptions.includes(targetCellPosition)) {
+    } else if (this.#selectedPiece && ((targetCellPiece == null) || (targetCellPiece.player != this.#playerTurn)) && selectedPieceOptions.includes(targetCellPosition)) {
       
       this.#selectedPiece.move(event, this.#gamePieces, targetCellPiece, targetCellPosition, this.#turn);
   
@@ -206,7 +206,7 @@ class Game {
 
   #pawnChangeWindowOpeningCondition() {
 
-    if ((this.#selectedPiece.getType() == "Pawn") && ((this.#selectedPiece.getPosition().split("_")[1] == "1") || (this.#selectedPiece.getPosition().split("_")[1] == "8"))) {
+    if ((this.#selectedPiece.type == "Pawn") && ((this.#selectedPiece.position.split("_")[1] == "1") || (this.#selectedPiece.position.split("_")[1] == "8"))) {
         
       this.#turn = {end: false, start: false};
 
