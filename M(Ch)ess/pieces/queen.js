@@ -2,20 +2,18 @@ import Piece from "./piece.js";
 
 class Queen extends Piece {
 
-  _img;
-
   constructor(position, color, player=null) {
 
     super(position, color, player);
-    this._img = (this._color == "white") ? "&#9813;" : "&#9819;";
+    this.img = (this.color == "white") ? "&#9813;" : "&#9819;";
 
-    $("#" + this._position).html(this._img);
+    $("#" + this.position).html(this.img);
 
   };
 
-  _moveOptions(gamePieces, calledForCheck=false, forKingCheckingCoordinates=false) {
+  moveOptions(gamePieces, calledForCheck=false, forKingCheckingCoordinates=false) {
 
-    this._validMoves = [];
+    this.validMoves = [];
 
     let positions, plane;
     let tempArray;
@@ -49,8 +47,8 @@ class Queen extends Piece {
       
       coordinate++;
 
-      coordinates = tempArray.map(this._addingCoordinates).filter(this._outOfBoundsCheck);
-      this._validMoves = this._validMoves.concat(this._filterMultipleMoveOptions(gamePieces, coordinates, forKingCheckingCoordinates));
+      coordinates = tempArray.map(this.addingCoordinates).filter(this.outOfBoundsCheck);
+      this.validMoves = this.validMoves.concat(this.filterMultipleMoveOptions(gamePieces, coordinates, forKingCheckingCoordinates));
   
       if (calledForCheck) checkCoordinates = checkCoordinates.concat([coordinates]);
 
@@ -73,8 +71,8 @@ class Queen extends Piece {
 
       };
 
-      coordinates = tempArray.map(this._addingCoordinates).filter(this._outOfBoundsCheck);
-      this._validMoves = this._validMoves.concat(this._filterMultipleMoveOptions(gamePieces, coordinates, forKingCheckingCoordinates));
+      coordinates = tempArray.map(this.addingCoordinates).filter(this.outOfBoundsCheck);
+      this.validMoves = this.validMoves.concat(this.filterMultipleMoveOptions(gamePieces, coordinates, forKingCheckingCoordinates));
   
       if (calledForCheck) checkCoordinates = checkCoordinates.concat([coordinates]);
 

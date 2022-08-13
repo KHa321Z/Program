@@ -2,22 +2,19 @@ import Piece from "./piece.js";
 
 class Rook extends Piece {
 
-  _img;
-  _castledPosition;
-
   constructor(position, color, player=null) {
 
     super(position, color, player);
-    this._img = (this._color == "white") ? "&#9814;" : "&#9820;";
-    this._castledPosition = (this._position.split("_")[0] == "1") ? "4_" + this._position.split("_")[1] : "6_" + this._position.split("_")[1];
+    this.img = (this.color == "white") ? "&#9814;" : "&#9820;";
+    this.castledPosition = (this.position.split("_")[0] == "1") ? "4_" + this.position.split("_")[1] : "6_" + this.position.split("_")[1];
 
-    $("#" + this._position).html(this._img);
+    $("#" + this.position).html(this.img);
 
   };
 
-  _moveOptions(gamePieces, calledForCheck=false, forKingCheckingCoordinates=false) {
+  moveOptions(gamePieces, calledForCheck=false, forKingCheckingCoordinates=false) {
 
-    this._validMoves = [];
+    this.validMoves = [];
 
     let tempArray;
     let coordinates, checkCoordinates;
@@ -50,8 +47,8 @@ class Rook extends Piece {
       
       coordinate++;
 
-      coordinates = tempArray.map(this._addingCoordinates).filter(this._outOfBoundsCheck);
-      this._validMoves = this._validMoves.concat(this._filterMultipleMoveOptions(gamePieces, coordinates, forKingCheckingCoordinates));
+      coordinates = tempArray.map(this.addingCoordinates).filter(this.outOfBoundsCheck);
+      this.validMoves = this.validMoves.concat(this.filterMultipleMoveOptions(gamePieces, coordinates, forKingCheckingCoordinates));
       
       if (calledForCheck) checkCoordinates = checkCoordinates.concat([coordinates]);
 
@@ -61,26 +58,26 @@ class Rook extends Piece {
 
   };
 
-  _changingRooksPositionForCastling(event, gamePieces) {
+  changingRooksPositionForCastling(event, gamePieces) {
 
     // to check if it is not executed externally
     if (event.originalEvent instanceof PointerEvent) {
       
-      $("#" + this._castledPosition).html(this._img);
+      $("#" + this.castledPosition).html(this.img);
 
-      $("#" + this._position).html("");
+      $("#" + this.position).html("");
 
-      gamePieces[this._position] = null;
-      gamePieces[this._castledPosition] = this;
-      this._position = this._castledPosition;
-      this._isMoved = true;
+      gamePieces[this.position] = null;
+      gamePieces[this.castledPosition] = this;
+      this.position = this.castledPosition;
+      this.isMoved = true;
 
     };
 
   };
 
   methodToCallInKingMove(event, gamePieces) {
-    this._changingRooksPositionForCastling(event, gamePieces);
+    this.changingRooksPositionForCastling(event, gamePieces);
   };
 
 };

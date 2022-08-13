@@ -1,21 +1,19 @@
-import Piece from ".piece.js";
+import Piece from "./piece.js";
 
 class Bishop extends Piece {
-
-  _img;
 
   constructor(position, color, player=null) {
 
     super(position, color, player);
-    this._img = (this._color == "white") ? "&#9815;" : "&#9821;";
+    this.img = (this.color == "white") ? "&#9815;" : "&#9821;";
 
-    $("#" + this._position).html(this._img);
+    $("#" + this.position).html(this.img);
 
   };
 
-  _moveOptions(gamePieces, calledForCheck=false, forKingCheckingCoordinates=false) {
+  moveOptions(gamePieces, calledForCheck=false, forKingCheckingCoordinates=false) {
 
-    this._validMoves = [];
+    this.validMoves = [];
     
     let plane, positions;
     let tempArray;
@@ -41,8 +39,8 @@ class Bishop extends Piece {
 
       };
 
-      coordinates = tempArray.map(this._addingCoordinates).filter(this._outOfBoundsCheck);
-      this._validMoves = this._validMoves.concat(this._filterMultipleMoveOptions(gamePieces, coordinates, forKingCheckingCoordinates));
+      coordinates = tempArray.map(this.addingCoordinates).filter(this.outOfBoundsCheck);
+      this.validMoves = this.validMoves.concat(this.filterMultipleMoveOptions(gamePieces, coordinates, forKingCheckingCoordinates));
   
       if (calledForCheck) checkCoordinates = checkCoordinates.concat([coordinates]);
 

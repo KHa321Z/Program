@@ -6,36 +6,33 @@ import Rook from "./rook.js";
 
 class Pawn extends Piece {
 
-  _img;
-  _yOffSet;
-
   constructor(position, color) {
 
     super(position, color);
-    this._img = (this._color == "white") ? "&#9817;" : "&#9823;";
-    this._yOffSet = (this._player == 1) ? 1 : -1;
+    this.img = (this.color == "white") ? "&#9817;" : "&#9823;";
+    this.yOffSet = (this.player == 1) ? 1 : -1;
 
-    $("#" + this._position).html(this._img);
+    $("#" + this.position).html(this.img);
 
   };
 
-  _simplePawnMovement(gamePieces, element) {
+  simplePawnMovement(gamePieces, element) {
 
     let piecePos = {};
     let coordinate = {};
-    let yOffsetForDoubleMove = this._yOffSet * 2;
+    let yOffsetForDoubleMove = this.yOffSet * 2;
     
     [coordinate.x, coordinate.y] = element.split("_").map( value => { return (parseInt(value)) });
-    [piecePos.x, piecePos.y] = this._position.split("_").map( value => { return (parseInt(value)) });
+    [piecePos.x, piecePos.y] = this.position.split("_").map( value => { return (parseInt(value)) });
 
 
     if (gamePieces[element] == null) {
 
       // first double move
-      if (!this._isMoved && (coordinate.y == (piecePos.y + yOffsetForDoubleMove))) {
+      if (!this.isMoved && (coordinate.y == (piecePos.y + yOffsetForDoubleMove))) {
 
         // if there is not a piece in front of the pawn
-        if (gamePieces[piecePos.x + "_" + (piecePos.y + this._yOffSet)] == null) return (true);
+        if (gamePieces[piecePos.x + "_" + (piecePos.y + this.yOffSet)] == null) return (true);
 
         // if there is a piece in front of the pawn
         return (false);
@@ -46,29 +43,29 @@ class Pawn extends Piece {
       if (coordinate.x == piecePos.x) return (true);
 
       // diagonal capturing move
-    } else return ((coordinate.x != piecePos.x) && (gamePieces[element].getPlayer() != this._player));
+    } else return ((coordinate.x != piecePos.x) && (gamePieces[element].player != this.player));
 
   };
 
-  _blockedPawnMovement(gamePieces, element) {
+  blockedPawnMovement(gamePieces, element) {
 
     let piecePos = {};
     let coordinate = {};
-    let yOffsetForDoubleMove = this._yOffSet * 2;
+    let yOffsetForDoubleMove = this.yOffSet * 2;
     
     [coordinate.x, coordinate.y] = element.split("_").map( value => { return (parseInt(value)) });
-    [piecePos.x, piecePos.y] = this._position.split("_").map( value => { return (parseInt(value)) });
+    [piecePos.x, piecePos.y] = this.position.split("_").map( value => { return (parseInt(value)) });
 
 
     if (gamePieces[element] == null) {
 
-      if (this._blockingFrom._position.split("_")[0] == this._position.split("_")[0]) {
+      if (this.blockingFrom.position.split("_")[0] == this.position.split("_")[0]) {
 
         // first double move
-        if (!this._isMoved && (coordinate.y == (piecePos.y + yOffsetForDoubleMove))) {
+        if (!this.isMoved && (coordinate.y == (piecePos.y + yOffsetForDoubleMove))) {
 
           // if there is not a piece in front of the pawn
-          if (gamePieces[piecePos.x + "_" + (piecePos.y + this._yOffSet)] == null) return (true);
+          if (gamePieces[piecePos.x + "_" + (piecePos.y + this.yOffSet)] == null) return (true);
 
           // if there is a piece in front of the pawn
           return (false);
@@ -81,37 +78,37 @@ class Pawn extends Piece {
     };
 
       // diagonal capturing move
-    } else return ((coordinate.x != piecePos.x) && (gamePieces[element].getPlayer() != this._player) && (this._blockingFrom == gamePieces[element]));
+    } else return ((coordinate.x != piecePos.x) && (gamePieces[element].player != this.player) && (this.blockingFrom == gamePieces[element]));
 
   };
 
-  _pawnMovementWhenKingIsChecked(gamePieces, element, playersKing) {
+  pawnMovementWhenKingIsChecked(gamePieces, element, playersKing) {
 
     let piecePos = {};
     let coordinate = {};
-    let yOffsetForDoubleMove = this._yOffSet * 2;
+    let yOffsetForDoubleMove = this.yOffSet * 2;
     
     [coordinate.x, coordinate.y] = element.split("_").map( value => { return (parseInt(value)) });
-    [piecePos.x, piecePos.y] = this._position.split("_").map( value => { return (parseInt(value)) });
+    [piecePos.x, piecePos.y] = this.position.split("_").map( value => { return (parseInt(value)) });
 
     let pieceCheckingKingCoordinates;
-    let pieceCheckingKing = playersKing._checkingPieces[0];
+    let pieceCheckingKing = playersKing.checkingPieces[0];
     let forKingCheckingCoordinates = true;
-    let elligibleBlockingPieceType = ["Queen", "Bishop", "Rook"].filter( element => element == pieceCheckingKing._type )
+    let elligibleBlockingPieceType = ["Queen", "Bishop", "Rook"].filter( element => element == pieceCheckingKing.type )
 
     // if the checking piece is a multiple moving piece then either block it form checking or capture it
     if (elligibleBlockingPieceType.length == 1) {
 
       pieceCheckingKingCoordinates = pieceCheckingKing.getValidMoves(gamePieces, false, forKingCheckingCoordinates);
-      //pieceCheckingKingCoordinates.unshift(pieceCheckingKing._position);
+      //pieceCheckingKingCoordinates.unshift(pieceCheckingKing.position);
 
       if (gamePieces[element] == null) {
 
         // first double move
-        if (!this._isMoved && (coordinate.y == (piecePos.y + yOffsetForDoubleMove))) {
+        if (!this.isMoved && (coordinate.y == (piecePos.y + yOffsetForDoubleMove))) {
 
           // if there is not a piece in front of the pawn and return true if the coordinate is in the path of the checking piece
-          if (gamePieces[piecePos.x + "_" + (piecePos.y + this._yOffSet)] == null) return (pieceCheckingKingCoordinates.includes(element));
+          if (gamePieces[piecePos.x + "_" + (piecePos.y + this.yOffSet)] == null) return (pieceCheckingKingCoordinates.includes(element));
 
           // if there is a piece in front of the pawn
           return (false);
@@ -122,78 +119,78 @@ class Pawn extends Piece {
         if (coordinate.x == piecePos.x) return (pieceCheckingKingCoordinates.includes(element));
 
         // diagonal capturing move if the checking piece is at the coordinate
-      } else return ((coordinate.x != piecePos.x) && (element == pieceCheckingKing._position));
+      } else return ((coordinate.x != piecePos.x) && (element == pieceCheckingKing.position));
 
 
     // if it is not a multiple moving piece then only capturing coordinate will be returned
-    } else return ((coordinate.x != piecePos.x) && (element == pieceCheckingKing._position));
+    } else return ((coordinate.x != piecePos.x) && (element == pieceCheckingKing.position));
 
   };
 
-  _moveOptions(gamePieces) {
+  moveOptions(gamePieces) {
 
-    this._validMoves = [];
+    this.validMoves = [];
     
     let coordinates = [];
 
-    if (!this._isMoved) coordinates = coordinates.concat([{x: 0, y: (2 * this._yOffSet)}]);
+    if (!this.isMoved) coordinates = coordinates.concat([{x: 0, y: (2 * this.yOffSet)}]);
 
-    coordinates = coordinates.concat([{x: 0, y: (1 * this._yOffSet)}, {x: 1, y: (1 * this._yOffSet)}, {x: -1, y: (1 * this._yOffSet)}]);
+    coordinates = coordinates.concat([{x: 0, y: (1 * this.yOffSet)}, {x: 1, y: (1 * this.yOffSet)}, {x: -1, y: (1 * this.yOffSet)}]);
 
-    this._validMoves = coordinates.map(this._addingCoordinates).filter(this._outOfBoundsCheck).filter( element => {
+    this.validMoves = coordinates.map(this.addingCoordinates).filter(this.outOfBoundsCheck).filter( element => {
 
       // to filter coordinates according to the condition of the king
-      let playersKing = Object.values(Object.filter(gamePieces, ([location, piece]) => (piece && (piece._player == this._player) && (piece._type == "King"))))[0];
+      let playersKing = Object.values(Object.filter(gamePieces, ([location, piece]) => (piece && (piece.player == this.player) && (piece.type == "King"))))[0];
       
 
       // if no piece is checking the king and it is not blocking any other piece from checking the king
-      if (!this._blockingFrom && (playersKing._checkingPieces.length == 0)) {
+      if (!this.blockingFrom && (playersKing.checkingPieces.length == 0)) {
 
-        return (this._simplePawnMovement(gamePieces, element));
+        return (this.simplePawnMovement(gamePieces, element));
 
 
       // if no piece is checking the king and it is blocking another piece from checking the king
-      } else if (this._blockingFrom && (playersKing._checkingPieces.length == 0)) {
+      } else if (this.blockingFrom && (playersKing.checkingPieces.length == 0)) {
 
-        return (this._blockedPawnMovement(gamePieces, element));
+        return (this.blockedPawnMovement(gamePieces, element));
 
       // if this piece is not blocking another piece from checking king and some other piece checked the king
-      } else if (!this._blockingFrom && (playersKing._checkingPieces.length == 1)) {
+      } else if (!this.blockingFrom && (playersKing.checkingPieces.length == 1)) {
 
-        return (this._pawnMovementWhenKingIsChecked(gamePieces, element, playersKing));
+        return (this.pawnMovementWhenKingIsChecked(gamePieces, element, playersKing));
 
         // if the selected piece is already blocking a piece from checking the king and the king is also in check from another piece or king is checked by 2 pieces
-      } else return (!(((!!this._blockingFrom) && (playersKing._checkingPieces.length == 1)) || (playersKing._checkingPieces.length > 1)))
+      } else return (!(((!!this.blockingFrom) && (playersKing.checkingPieces.length == 1)) || (playersKing.checkingPieces.length > 1)))
 
     });
 
   };
 
-  _pawnMovesForOpponentKing() {
+  pawnMovesForOpponentKing() {
 
-    return ([{x: 1, y: (1 * this._yOffSet)}, {x: -1, y: (1 * this._yOffSet)}].map(this._addingCoordinates).filter(this._outOfBoundsCheck));
+    return ([{x: 1, y: (1 * this.yOffSet)}, {x: -1, y: (1 * this.yOffSet)}].map(this.addingCoordinates).filter(this.outOfBoundsCheck));
 
   };
 
-  _promotingPawn(event, gamePieces) {
+  promotingPawn(event, gamePieces) {
 
     if (event.originalEvent instanceof PointerEvent) {
 
       switch (event.target.id) {
         case "queen":
-          gamePieces[this._position] = new Queen(this._position, this._color, this._player);
+          gamePieces[this.position] = new Queen(this.position, this.color, this.player);
           break;
 
         case "bisop":
-          gamePieces[this._position] = new Bishop(this._position, this._color, this._player);
+          gamePieces[this.position] = new Bishop(this.position, this.color, this.player);
           break;
 
         case "knight":
-          gamePieces[this._position] = new Knight(this._position, this._color, this._player);
+          gamePieces[this.position] = new Knight(this.position, this.color, this.player);
           break;
 
         case "rook":
-          gamePieces[this._position] = new Rook(this._position, this._color, this._player);
+          gamePieces[this.position] = new Rook(this.position, this.color, this.player);
           break;
       };
 
@@ -202,7 +199,7 @@ class Pawn extends Piece {
   };
 
   changePawn(event, gamePieces) {
-    this._promotingPawn(event, gamePieces);
+    this.promotingPawn(event, gamePieces);
   };
 
 };
