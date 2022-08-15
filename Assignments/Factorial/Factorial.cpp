@@ -11,6 +11,31 @@ Write a program that reads a nonnegative integer and prints its factorial.
 
 using namespace std;
 
+long factorial (long nonNegInt) {
+    return (nonNegInt == 1 || nonNegInt == 0) ? (nonNegInt) : (nonNegInt * factorial(nonNegInt - 1));
+};
+
+long nonNegativeInt;
+
+int main() {
+    
+    cout << "Enter Non Negative Integer: ";
+    cin >> nonNegativeInt;
+  
+    if (nonNegativeInt < 0) {
+        
+        cout << "The Entered Integer is a Negative Integer!";
+        return 0;
+        
+    };
+    
+    cout << endl << factorial(nonNegativeInt);
+
+    return 0;
+    
+};
+
+/*
 int factorial = 1;
 int currentInteger;
 int nonNegativeInteger;
@@ -31,4 +56,5 @@ int main()
 
   return 1;
 
-}
+};
+*/
