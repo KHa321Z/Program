@@ -13,10 +13,7 @@ using namespace std;
 
 long factorial (long nonNegInt) {
     
-    if (nonNegInt == 1) 
-        return (nonNegInt);
-        
-    else return (nonNegInt * factorial(nonNegInt - 1));
+    return (nonNegInt == 1 || nonNegInt == 0) ? (nonNegInt) : (nonNegInt * factorial(nonNegInt - 1));
         
 };
 
